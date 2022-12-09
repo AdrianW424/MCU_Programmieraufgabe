@@ -1,0 +1,53 @@
+\documentclass[german]{article}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{graphicx}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{float}
+\title{\textbf{Dokumentation~Laborprojekt\\Systemnahe~Programmierung~2}}
+
+\author{
+    Adrian~Waldera~(5932553) \\
+    Jannik~Peplau~(1995581) \\
+    STG-TINF20IN\\
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Pinbelegung}
+
+\begin{table}[H]\centering\begin{tabular}{|l|l|}
+\hline
+Anschluss am Sensor & Pin am Microcontroller\\\hline
+VDD & +5.0 V\\\hline
+TRIG & ??\\\hline
+ECHO & ??\\\hline
+VSS & GND\\\hline
+\end{tabular}\caption{Pinbelegung Ultraschallsensor}\end{table}\label{tab-pinsus}
+
+\begin{table}[H]\centering\begin{tabular}{|l|l|l|}
+\hline
+Pin & Anschluss am LCD-Display & Pin am Microcontroller\\\hline
+1 & VDD & +3.3 V\\\hline
+2 & VSS & GND\\\hline
+3 & SDA & \\\hline
+4 & SCL & \\\hline
+5 & RST & +3.3 V (über 1k$\Omega$)\\\hline
+6 & A & +3.3 V\\\hline
+7 & K & GND \\\hline
+8 & NC & Nicht verbunden\\\hline
+\end{tabular}\caption{Pinbelegung Ultraschallsensor}\end{table}\label{tab-pinsus}
+
+\section{Implementierte Funktionen}
+Test
+
+\end{document}
