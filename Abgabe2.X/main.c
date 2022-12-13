@@ -1,8 +1,3 @@
-/*
- First PIC32MM program
- 
- This simple example program lets LED1 blink
- */
 
 #include <stdint.h>
 #include <stdio.h>
@@ -26,12 +21,10 @@ void initInputCapture();
 void initOutputCompare();
 void initTimer1();
 void initButton1();
+void initButton3();
 void initI2C();
 
-void setup() {   
-    TRISCbits.TRISC13 = 0;     // set bit 13 of Port C for output
-    TRISDbits.TRISD3 = 0;
-    
+void setup() {
     SYSTEM_Initialize();
     
     initI2C();
@@ -122,8 +115,6 @@ void initOutputCompare() {
 }
 
 void initTimer1() {
-    TRISBbits.TRISB7 = 0;   // just for testing
-    
     // Init Timer
     T1CONbits.TCKPS0 = 0;   //
     T1CONbits.TCKPS1 = 1;   // set prescaler to 64
@@ -170,14 +161,49 @@ u8 validFlag = 1;
 /**************************/
 
 void __ISR(_EXTERNAL_3_VECTOR, IPL7SOFT) Button3ISR(void) {
+    menu = menu;
+    asm volatile(
+    "addi $t0, $zero, 2                         \n\t"
+    "bne $t0, %[menu], 1f                       \n\t"   // if(menu == 2)
+    "nop                                        \n\t"
+    "addi $t1, %[distance], 0                   \n\t"   // thisDistance
+    "addi $t0, $zero, 401                       \n\t"   // if thisDistance <= 400 (größer kann nur 401 sein)
+    "beq $t0, $t1, 2f                           \n\t"   // -||-
+    "nop                                        \n\t"
+    "addi %[validFlag], $zero, 1                \n\t"   // validFlag = 1
+    "bne $t0, %[savedDistance], 3f              \n\t"   // if(savedDistance == 401)
+    "nop                                        \n\t"
+    "addi %[diffDistance], $zero, 401           \n\t"
+    "addi %[savedDistance], $t1, 0              \n\t"
+    "j 1f                                       \n\t"
+    "nop                                        \n\t"
+    "3:                                             "   // else (savedDistance != 401)
+    "sub %[diffDistance], $t1, %[savedDistance] \n\t"
+    "addi %[savedDistance], $zero, 401          \n\t"
+    "j 1f                                       \n\t"
+    "nop                                        \n\t"
+    "2:                                             "
+    "addi %[validFlag], $zero, 0                \n\t"   // validFlag = 0
+    "1:                                             "
+    "addi %[int3if], $zero, 0                   \n\t"   // IF to 0
+    :[validFlag]"=r"(validFlag),[savedDistance]"+r"(savedDistance),
+            [diffDistance]"+r"(diffDistance),[int3if]"=r"(IFS0bits.INT3IF)
+    :[distance]"r"(distance),[menu]"r"(menu)
+    :"t0", "t1"
+    );
+    
+    menu = menu;
+    
+    /*
     if(menu == 2) {
-        if(distance <= 400) {
+        int thisDistance = distance;
+        if(thisDistance <= 400) {
             validFlag = 1;
-            if(savedDistance >= 401) {
+            if(savedDistance == 401) {
                 diffDistance = 401;
-                savedDistance = distance;
+                savedDistance = thisDistance;
             } else {
-                diffDistance = distance - savedDistance;
+                diffDistance = thisDistance - savedDistance;
                 savedDistance = 401;
             }
         } else {
@@ -186,6 +212,7 @@ void __ISR(_EXTERNAL_3_VECTOR, IPL7SOFT) Button3ISR(void) {
     }
     
     IFS0bits.INT3IF = 0;
+    */
 }
 
 void __ISR(_EXTERNAL_2_VECTOR, IPL6SOFT) Button1ISR(void) {
@@ -194,6 +221,8 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL6SOFT) Button1ISR(void) {
     if(menu == 3) {
         menu = 0;
     }
+    
+    IFS0bits.INT2IF = 0;
     */
     
     asm volatile(
@@ -203,12 +232,11 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL6SOFT) Button1ISR(void) {
     "nop                        \n\t"
     "addi %[menu], $zero, 0     \n\t"
     "1:                             "
-    :[menu]"+r"(menu)
+    "addi %[int2if], $zero, 0   \n\t"   // IF to 0
+    :[menu]"+r"(menu),[int2if]"=r"(IFS0bits.INT2IF)
     :
     :"t0"
     );
-    
-    IFS0bits.INT2IF = 0;
 }
 
 void getOpticalDistance(char* optDist) {
@@ -236,10 +264,6 @@ void __ISR(_TIMER_1_VECTOR, IPL4SOFT) Timer1ISR(void){
         dist[0] = ' ';
     }
     sprintf(&dist[1], "%0.3d", thisDistance); // int to string
-    
-    // nur zum Testen
-    LATBbits.LATB7 = !LATBbits.LATB7;
-    //
     
     /*Clears the LCD display*/
     clearLCD();
@@ -321,18 +345,11 @@ void readSensor() {
 }
 
 void __ISR(_CCP2_VECTOR, IPL1SOFT) CCP2ISR(void) {
-    // vielleicht in Assembler - lieber nicht (vielleicht nur Teile)
-        readSensor();
-    /***** Nur zu Darstellungszwecken *****/
-    if(CCP2STATbits.ICBNE == 0) {   // wenn beide Bufferwerte ausgelesen wurden, Flag ICBNE ist 0
-        LATCbits.LATC13 = !LATCbits.LATC13;
-    }
-    /**************************************/
+    readSensor();
     CCP2TMR = 0;               // reset timer
     IFS2bits.CCP2IF = 0;
 }
 
 int main(void) {
     setup();
-    while(1);
 }
