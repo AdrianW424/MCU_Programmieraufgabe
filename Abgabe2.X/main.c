@@ -161,28 +161,27 @@ u8 validFlag = 1;
 /**************************/
 
 void __ISR(_EXTERNAL_3_VECTOR, IPL7SOFT) Button3ISR(void) {
-    menu = menu;
     asm volatile(
-    "addi $t0, $zero, 2                         \n\t"
-    "bne $t0, %[menu], 1f                       \n\t"   // if(menu == 2)
+    "addi $t0, $zero, 2                         \n\t"   // if(menu == 2)
+    "bne $t0, %[menu], 1f                       \n\t"   // -||-
     "nop                                        \n\t"
-    "addi $t1, %[distance], 0                   \n\t"   // thisDistance
+    "addi $t1, %[distance], 0                   \n\t"   // thisDistance is $t1
     "addi $t0, $zero, 401                       \n\t"   // if thisDistance <= 400 (größer kann nur 401 sein)
     "beq $t0, $t1, 2f                           \n\t"   // -||-
     "nop                                        \n\t"
     "addi %[validFlag], $zero, 1                \n\t"   // validFlag = 1
     "bne $t0, %[savedDistance], 3f              \n\t"   // if(savedDistance == 401)
     "nop                                        \n\t"
-    "addi %[diffDistance], $zero, 401           \n\t"
-    "addi %[savedDistance], $t1, 0              \n\t"
+    "addi %[diffDistance], $zero, 401           \n\t"   // diffDistance = 401
+    "addi %[savedDistance], $t1, 0              \n\t"   // savedDistance = thisDistance
     "j 1f                                       \n\t"
     "nop                                        \n\t"
     "3:                                             "   // else (savedDistance != 401)
-    "sub %[diffDistance], $t1, %[savedDistance] \n\t"
+    "sub %[diffDistance], $t1, %[savedDistance] \n\t"   // diffDistance = thisDistance - saveDistance
     "addi %[savedDistance], $zero, 401          \n\t"
     "j 1f                                       \n\t"
     "nop                                        \n\t"
-    "2:                                             "
+    "2:                                             "   // else (thisDistance > 400 bzw. == 401)
     "addi %[validFlag], $zero, 0                \n\t"   // validFlag = 0
     "1:                                             "
     "addi %[int3if], $zero, 0                   \n\t"   // IF to 0
@@ -191,8 +190,6 @@ void __ISR(_EXTERNAL_3_VECTOR, IPL7SOFT) Button3ISR(void) {
     :[distance]"r"(distance),[menu]"r"(menu)
     :"t0", "t1"
     );
-    
-    menu = menu;
     
     /*
     if(menu == 2) {
