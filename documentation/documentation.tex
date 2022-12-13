@@ -11,13 +11,8 @@
 \usepackage[ngerman]{babel}
 \usepackage[margin=2cm]{geometry}
 \usepackage{float}
-\title{\textbf{Dokumentation~Laborprojekt\\Systemnahe~Programmierung~2}}
-
-\author{
-    Adrian~Waldera~(5932553) \\
-    Jannik~Peplau~(1995581) \\
-    STG-TINF20IN\\
-}
+\title{\textbf{Dokumentation~Laborprojekt Systemnahe~Programmierung~2} \\
+Adrian~Waldera~(5932553) und Jannik~Peplau~(1995581) \\}
 
 \begin{document}
 
@@ -25,33 +20,73 @@
 
 \section{Pinbelegung}
 
-\begin{table}[H]\centering\begin{tabular}{|l|l|}
+\begin{tabular}{cc}
+\centering
+\begin{tabular}{|l|l|}
 \hline
 Anschluss am Sensor & Pin am Microcontroller\\\hline
 VDD & +5.0 V\\\hline
-TRIG & RA9\\\hline
-ECHO & ??\\\hline
+TRIG & RA1\\\hline
+ECHO & RB5\\\hline
 VSS & GND\\\hline
-\end{tabular}\caption{Pinbelegung Ultraschallsensor}\end{table}\label{tab-pinsus}
-
-\begin{table}[H]\centering\begin{tabular}{|l|l|l|}
+\end{tabular}
+&
+\begin{tabular}{|l|l|l|}
 \hline
-Pin & Anschluss am LCD-Display & Pin am Microcontroller\\\hline
-1 & VDD & +3.3 V\\\hline
-2 & VSS & GND\\\hline
-3 & SDA & RB7\\\hline
-4 & SCL & RB13\\\hline
-5 & RST & +3.3 V (über 1k$\Omega$)\\\hline
-6 & A & +3.3 V\\\hline
-7 & K & GND \\\hline
-8 & NC & Nicht verbunden\\\hline
-\end{tabular}\caption{Pinbelegung LCD-Display}\end{table}\label{tab-pinsdp}
+Anschluss am LCD-Display & Pin am PIC32\\\hline
+VDD & +3.3 V\\\hline
+VSS & GND\\\hline
+SDA & RB7\\\hline
+SCL & RB13\\\hline
+RST & +3.3 V (über 1k$\Omega$)\\\hline
+A & +3.3 V\\\hline
+K & GND \\\hline
+NC & Nicht verbunden\\\hline
+\end{tabular}
+\end{tabular}
 
-\section{Implementierte Funktionen}
-\subsection{Trigger-Signal durch PWM mit Output Compare}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.4\textwidth}
+      \includegraphics[width=\textwidth]{img/comp.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.4\textwidth}
+      \includegraphics[width=\textwidth]{img/plan.png}
+    \end{minipage}
+  \end{figure}
 
-\subsection{Echo-Messung per Input Capture}
+\section{Interrupt-Routinen}
 
-\subsection{...}
+\begin{itemize}
+    \item Taster S1: RB9 - INT 2    \\ Zum Wechseln des aktuell gewählten Menüpunktes
+    \item Taster S3: RC4 - INT 3    \\ Zum Festhalten von Messwerten innerhalb von Menü 3
+    \item Input Capture             \\ Zum Messen der Flanken des Echo-Signals
+    \item Timer 1                   \\ Zum Auslösen eines Refresh auf dem LCD-Display
+\end{itemize}
+
+\section{Menüs}
+
+\begin{itemize}
+\item Menüpunk 1: Keine Funktion (zweite Zeile leer)
+\item Menüpunk 2: Grafische Veranschaulichung der gemessenen Entfernung
+\item Menüpunk 3: Errechnung der Distanz zwischen zwei Messwerten
+\end{itemize}
+
+\subsection{Grafische Veranschaulichung}
+
+In diesem Menüpunk wird die gemessene Distanz in einen Fortschrittsbalken umgewandelt. Hierfür wird die maximale Distanz (400 cm) in vierzehn gleiche Abschnitte unterteilt. Somit entspricht jeder dieser Abschnitte 28 cm. Zur ermittlung der Anzahl anzuzeigender Elemente im Fortschrittsbalken muss die gemessene Distanz somit durch 28 geteilt werden.
+\begin{figure}[H]\centering\includegraphics[width=0.5\textwidth]{img/dist.png}\end{figure}
+
+\subsection{Differenzermittlung}
+
+Innerhalb des Menüpunkes 3 lässt sich mithilfe von Taster S3 die Differenz zwischen zwei Messpunkten ermitteln und festhalten. Heirfür wird bei erstmaliger Betätigung des Tasters der aktuelle Messwert in einer Buffer-Variable gespeichert, bei der zweiten Betätigung wird die Differenz aus aktuellem Messwert und gespeichertem Wert gebildet und anschließend in der zweiten Zeile gespeichert. Hierbei wird die Richtung der Differenz durch das Vorzeichen des Ergebnisses angegeben.
+\begin{figure}[H]\centering\includegraphics[width=0.5\textwidth]{img/diff.png}\end{figure}
+
+\section{Input Capture und Output Compare}
+
+\subsection{}
+
+\subsection{}
 
 \end{document}
