@@ -24,7 +24,7 @@ Adrian~Waldera~(5932553) und Jannik~Peplau~(1995581) \\}
 \centering
 \begin{tabular}{|l|l|}
 \hline
-Anschluss am Sensor & Pin am Microcontroller\\\hline
+\textbf{Anschluss am Sensor} & \textbf{Pin am Microcontroller}\\\hline
 VDD & +5.0 V\\\hline
 TRIG & RA1\\\hline
 ECHO & RB5\\\hline
@@ -33,7 +33,7 @@ VSS & GND\\\hline
 &
 \begin{tabular}{|l|l|l|}
 \hline
-Anschluss am LCD-Display & Pin am PIC32\\\hline
+\textbf{Anschluss am LCD-Display} & \textbf{Pin am PIC32}\\\hline
 VDD & +3.3 V\\\hline
 VSS & GND\\\hline
 SDA & RB7\\\hline
@@ -49,10 +49,12 @@ NC & Nicht verbunden\\\hline
     \centering
     \begin{minipage}[b]{0.4\textwidth}
       \includegraphics[width=\textwidth]{img/comp.png}
+      \caption{Aufbau des Laborexperimentes}
     \end{minipage}
     \hfill
     \begin{minipage}[b]{0.4\textwidth}
       \includegraphics[width=\textwidth]{img/plan.png}
+      \caption{Schlatplan der verbauten Komponenten}
     \end{minipage}
   \end{figure}
 
@@ -65,7 +67,21 @@ NC & Nicht verbunden\\\hline
     \item Timer 1                   \\ Zum Auslösen eines Refresh auf dem LCD-Display
 \end{itemize}
 
-\section{Menüs}
+\section{Implementierte Ergänzungen}
+
+\subsection{Input Capture Unit}
+
+Zur Ermittlung der Verzögerung zwischen steigender und fallender Taktflanke einer Periode des Echo-Signals wird die Input Caputre Unit verwendet.
+
+\subsection{Output Compare Unit}
+
+Zur generierung des Taktsignales TRIG für den Ultraschallsensor wird PWM\footnote{Pulse Width Modulation} über die Output Compare Unit verwendet.
+
+\subsection{Anzeige ungültiger Messwerte}
+
+Wird vom Sensor rückgemeldet, dass das erfasste Objekt mehr als die laut Datenblatt messbaren 400 cm beträgt, so wird dies in der ersten Zeile des Displays angezeigt.
+
+\subsection{Menüs}
 
 \begin{itemize}
 \item Menüpunk 1: Keine Funktion (zweite Zeile leer)
@@ -73,20 +89,18 @@ NC & Nicht verbunden\\\hline
 \item Menüpunk 3: Errechnung der Distanz zwischen zwei Messwerten
 \end{itemize}
 
-\subsection{Grafische Veranschaulichung}
+\subsubsection{Grafische Veranschaulichung}
 
 In diesem Menüpunk wird die gemessene Distanz in einen Fortschrittsbalken umgewandelt. Hierfür wird die maximale Distanz (400 cm) in vierzehn gleiche Abschnitte unterteilt. Somit entspricht jeder dieser Abschnitte 28 cm. Zur ermittlung der Anzahl anzuzeigender Elemente im Fortschrittsbalken muss die gemessene Distanz somit durch 28 geteilt werden.
 \begin{figure}[H]\centering\includegraphics[width=0.5\textwidth]{img/dist.png}\end{figure}
 
-\subsection{Differenzermittlung}
+\subsubsection{Differenzermittlung}
 
 Innerhalb des Menüpunkes 3 lässt sich mithilfe von Taster S3 die Differenz zwischen zwei Messpunkten ermitteln und festhalten. Heirfür wird bei erstmaliger Betätigung des Tasters der aktuelle Messwert in einer Buffer-Variable gespeichert, bei der zweiten Betätigung wird die Differenz aus aktuellem Messwert und gespeichertem Wert gebildet und anschließend in der zweiten Zeile gespeichert. Hierbei wird die Richtung der Differenz durch das Vorzeichen des Ergebnisses angegeben.
 \begin{figure}[H]\centering\includegraphics[width=0.5\textwidth]{img/diff.png}\end{figure}
 
-\section{Input Capture und Output Compare}
+\section{Bedienung des Programms}
 
-\subsection{}
-
-\subsection{}
+Nach Anschluss von Sensor und Display wird in der ersten Zeile des Displays die vom Sensor zurückgegebene Entfernung in Zentimetern [cm] angezeigt. Über die Betätigung von Taster S1 kann durch die verschiedenen Funktionen des Menüs gewechselt werden. Nach einmaligen Drücken zeigt die zweite Zeile einen Fortschrittsbalken, welcher wie bereits beschrieben die Entfernung zum vom Sensor erfassten Objekt grafisch darstellt. In Menüpunkt 2 kann über die Betätigung von Taster 3 der aktuelle Messwert gespeichert werden. Bei erneuter Betätigung wird dann in der zweiten Zeile die Differenz der beiden Messwerte gezeigt, das Vorzeichen der Differenz gibt die Richtung der Veränderung an. Hierbei kann nur mit Messwerten im Bereich von 2 bis 400 cm gearbeitet werden, andere Messwerte werden vom Programm abgelehnt, dem Benutzer wird eine Fehlermeldung ausgegeben.
 
 \end{document}

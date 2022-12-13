@@ -1,3 +1,9 @@
+/*
+Dokumentenname: LCD.c
+Autoren: Jannik Peplau, Adrian Waldera
+Matrikelnummern: 1995581, 5932553
+Projektname: Labor-Programmieraufgabe
+*/
 
 /* some useful functions for controlling LCD */
 
@@ -9,34 +15,32 @@ typedef unsigned int u32;
 
 void delay_us(unsigned int us);
 
-// Startet das I2C-Modul
+// Starts the I2C module
 void startI2C() {
-    // anschalten
+    // enable
     I2C3CONbits.SEN = 1;
-    // warten, bis der Befehl ausgeführt wurde
+    // wait until command was executed
     while (IFS2bits.I2C3MIF == 0);
-    // Befehl wurde ausgeführt -> Master-Interupt-Flag zurücksetzen
+    // Command executed, reset interrupt flag
     IFS2bits.I2C3MIF = 0;
 }
 
-// Beendet das I2C-Modul
+// Stops the I2C module
 void stopI2C() {
-    // ausschalten
     I2C3CONbits.PEN = 1;
-    // warten, bis der Befehl ausgeführt wurde
+    // wait until command was executed
     while (IFS2bits.I2C3MIF == 0);
-    // Befehl wurde ausgeführt -> Master-Interupt-Flag zurückjsetzen
+    // Command executed, reset interrupt flag
     IFS2bits.I2C3MIF = 0;
 } 
 
-// Schreiben einer Adressse auf den Abressbus für das I2C-Modul
+// Write address to address bus
 u8 writeI2C(u8 byte) {
-    // I2C-Modul ist Slave.
-    // Slave die Adresse senden mit read/write-Bit zurückgesetzt
+    // send address to slave and reset
     I2C3TRN = byte | 0;              
-    // warten, bis der Befehl ausgeführt wurde
+    // wait until command was executed
     while (IFS2bits.I2C3MIF == 0);
-    // Befehl wurde ausgeführt -> Master-Interupt-Flag zurücksetzen
+    // Command executed, reset interrupt flag
     IFS2bits.I2C3MIF = 0;
     return 1;
 }
