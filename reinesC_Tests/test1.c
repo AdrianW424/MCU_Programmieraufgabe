@@ -11,9 +11,14 @@ int main() {
     for(int i = 0; i < 16; i++) {
         printf("%c", str[i]);
     }
-    int a = 200;
-    char dig[3];
-    sprintf(dig, "%0.3d", a/28);
+    int a = 400;
+    char dig[5];
+    if (a >= 401) {
+        dig[0] = '>';
+    } else {
+        dig[0] = ' ';
+    }
+    sprintf(&dig[1], "%0.3d", -10);
     printf("%s", dig);
 
     return 0;

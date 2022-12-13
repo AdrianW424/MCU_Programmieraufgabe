@@ -95,9 +95,7 @@ void initButton1() {
     // Interrupt Pins INT1 is RB14
     ANSELBbits.ANSB14 = 0;
     TRISBbits.TRISB14 = 1;
-    // nur zum Testen
     TRISBbits.TRISB13 = 0;
-    //
     
     IEC0bits.INT1IE = 0;
     // fallende Flanke
@@ -119,17 +117,33 @@ int menu = 0;   // selected menu
 /**************************/
 
 void __ISR(_EXTERNAL_1_VECTOR, IPL6SOFT) Button1ISR(void) {
-    // nur zum Testen
-    LATBbits.LATB13 = !LATBbits.LATB13;
-    //
-    
-    //TODO: Assembler
-    menu++;
+    IEC0bits.INT1IE = 0;
+    /*menu++;
     if(menu == 3) {
         menu = 0;
+    }*/
+    //while(!PORTBbits.RB14);
+    
+    asm volatile(
+    "addi %[menu], %[menu], 1   \n\t"
+    "addi $t0, $zero, 3         \n\t"
+    "bne %[menu], $t0, 1f       \n\t"
+    "nop                        \n\t"
+    "addi %[menu], $zero, 0     \n\t"
+    "1:                             "
+    :[menu]"+r"(menu)
+    :
+    :"t0"
+    );
+    
+    if (menu == 2) {
+        LATBbits.LATB13 = 1;
+    } else {
+        LATBbits.LATB13 = 0;
     }
     
     IFS0bits.INT1IF = 0;
+    IEC0bits.INT1IE = 1;
 }
 
 void getOpticalDistance(char* optDist) {

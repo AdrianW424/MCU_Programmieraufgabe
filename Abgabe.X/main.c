@@ -23,13 +23,13 @@ void initTimer() {
     TMR1 = 0;					// clear TMR1 of Timer 1
     PR1 = 2;                    // set PR1 to 1
     T1CONbits.TCKPS0 = 0;   //
-    T1CONbits.TCKPS1 = 1;   // set prescaler to 256
+    T1CONbits.TCKPS1 = 1;   // set prescaler to 64
     
     // Init Interrupt
     IPC4bits.T1IP = 2;
     IFS0bits.T1IF = 0;  // interrupt flag
     IEC0bits.T1IE = 1;  // interrupt enable
-	// => mit Prescaler 1:2 wird f zu 12 MHz, für 500 Hz brauchen wir 12 MHz / (500*32) = 750 für das Periodenregister
+
     T1CONbits.ON = 1;       // turn on Timer1
     //__builtin_enable_interrupts();
 }
