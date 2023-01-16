@@ -30,13 +30,12 @@
 *.bak
 
 # Obsolete
-/.vscode
-/Abgabe.X
-/documentation
-/Gute Vorarbeiten
-/Labor3_Vorbereitung
-/reinesC_Tests
-/Simuliert_Abgabe.X
-/testGPL3.X
-/testGPL4.X
-/Tests
+Abgabe.X/
+documentation/
+Gute Vorarbeiten/
+Labor3_Vorbereitung/
+reinesC_Tests/
+Simuliert_Abgabe.X/
+testGPL3.X/
+testGPL4.X/
+Tests/
