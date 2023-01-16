@@ -1,6 +1,7 @@
 /*
 Dokumentenname: LCD.c
 Matrikelnummern: 1995581, 5932553
+Autoren: Jannik Peplau, Adrian Waldera
 Projektname: Labor-Programmieraufgabe
 */
 
