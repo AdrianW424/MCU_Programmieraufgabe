@@ -1,5 +1,14 @@
 # .gitignore file
 
+# Obsolete
+Abgabe.X/
+Labor3_Vorbereitung/
+reinesC_Tests/
+Simuliert_Abgabe.X/
+testGPL3.X/
+testGPL4.X/
+Tests/
+
 # MPLAB X IDE (Netbeans) specific
 **/*.X/~*.*
 **/*.X/build/
@@ -28,14 +37,3 @@
 # Misc
 .svn
 *.bak
-
-# Obsolete
-Abgabe.X/
-documentation/
-Gute Vorarbeiten/
-Labor3_Vorbereitung/
-reinesC_Tests/
-Simuliert_Abgabe.X/
-testGPL3.X/
-testGPL4.X/
-Tests/
